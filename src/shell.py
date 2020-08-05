@@ -15,6 +15,10 @@ while True:
     command = input('>> ')
     if command == 'exit':
         break
+    elif command == 'init_bash':
+        command = ''
+    elif command == 'init_powershell':
+        command = ''
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'command.lock'), 'w') as lock:
         lock.write(command)
 
