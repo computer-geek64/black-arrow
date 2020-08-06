@@ -6,14 +6,15 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from flask import Flask, request
 from werkzeug.utils import secure_filename
-from config import HOSTNAME, REFRESH_DELAY, ALLOWED_EXTENSIONS
+from config import HOSTNAME, REFRESH_DELAY
 
 
 app = Flask(__name__)
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    #return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename
 
 
 @app.route('/', methods=['GET'])
