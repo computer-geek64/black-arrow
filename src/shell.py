@@ -22,7 +22,7 @@ while True:
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'command.lock'), 'w') as lock:
         lock.write(command)
 
-    for i in range(REFRESH_DELAY):
+    for i in range(REFRESH_DELAY + 1):
         sleep(1)
         if os.stat(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'stdout.lock')).st_size > 0:
             break
